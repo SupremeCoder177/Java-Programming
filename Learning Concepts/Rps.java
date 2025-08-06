@@ -71,6 +71,7 @@ public class Rps {
         }else{
             System.out.println("Yay you won, you beat the computer, maybe AI won't take over after all !!");
         }
+        this.scanner.close();
     }
 
     // NOTE: num will only be 1 or -1
