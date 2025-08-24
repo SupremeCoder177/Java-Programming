@@ -13,6 +13,7 @@ public class Uno {
     private String curr_player;
     private boolean player_drawn = false;
     private boolean comp_drawn = false;
+    private int plusFourThrown = 0;
 
     List<String[]> playerInven;
     List<String[]> compInven;
@@ -91,9 +92,11 @@ public class Uno {
         }
     }
 
-
     //gets player input
     private void getPlayerInput(){
+        if(this.playerInven.isEmpty()){
+            return;
+        }
         int choice;
         while(true){
             System.out.println();
@@ -134,107 +137,227 @@ public class Uno {
         }
         if(choice == 0) return;
         this.checkChoice(this.playerInven.get(choice - 1));
-        this.applyCardEffect(this.playerInven.get(choice - 1));
+        boolean temp = this.applyCardEffect(this.playerInven.get(choice - 1));
+        this.setTopCard(this.playerInven.get(choice - 1));
+        this.playerInven.remove(choice - 1);
+        if(temp){this.getPlayerInput();}
     }
 
     private void getCompCard(){
+        if(this.compInven.isEmpty()){
+            return;
+        }
+        if(this.comp_drawn){
+            String[] card = this.compInven.getLast();
+            boolean use = false;
+            if(card[0] == (null)){use = true;}
+            if(card[0] != null && card[0].equals(this.top_card[0])){use = true;}
+            if(use){
+                System.out.println("The computer used the card they drew.");
+                this.applyCardEffect(card);
+                this.setTopCard(this.compInven.removeLast());
+            }
+            return;
+        }
 
+        boolean hasColor = false;
+        boolean hasSpecial = false;
+        int choice = 0;
+        for(String[] card: this.compInven){
+            if(card[0] == null){hasSpecial = true; continue;}
+            if(card[0].equals(this.top_card[0])){hasColor = true;}
+        }
+        if(hasColor){
+            for(int i = 0; i < this.compInven.size(); i++){
+                if(this.compInven.get(i)[0].equals(this.top_card[0])){
+                   choice = i;
+                   break;
+                }
+            }
+        }else{
+            if(hasSpecial){
+                for(int i = 0; i < this.compInven.size(); ++i){
+                    if(this.compInven.get(i)[0].equals(null)){
+                        choice = i;
+                        break;
+                    }
+                }
+            }else{
+                choice = 100;
+            }
+        }
+        System.out.println();
+        System.out.println("It's the computer's turn.");
+        if(choice != 100){
+            System.out.println("The computer has chosen " + this.compInven.get(choice)[0] + " " + this.compInven.get(choice)[1]);
+            boolean temp = this.applyCardEffect(this.compInven.get(choice));
+            this.setTopCard(this.compInven.get(choice));
+            this.compInven.remove(choice);
+            if(temp){this.getCompCard();}
+        }else{
+            System.out.println("The computer has taken a card from the stack.");
+            this.addCards(this.compInven, 1);
+            this.comp_drawn = true;
+            this.getCompCard();
+        }
     }
 
     private void checkChoice(String[] choice){
         if(choice[0] == null){
             return;
         }
-        if(this.top_card[0] == null){
+        if(this.top_card[0] == null || this.top_card[1] == null){
             return;
         }
-        if(!choice[0].equals(this.top_card[0])){
-            if(curr_player.equals("player") && !player_drawn) {
+        if(!choice[0].equals(this.top_card[0]) && !choice[1].equals(this.top_card[1])){
+            if(!player_drawn) {
                 System.out.println();
-                System.out.println("The color of the chosen card should match the color of the top card, if you don't have a matching card then try taking a card from the deck.");
+                System.out.println("The color of the chosen card should match the color of the top card\nor the number of the top card, if you don't have a matching card then try taking a card from the deck.");
                 this.getPlayerInput();
-            }else if(curr_player.equals("player") && player_drawn){
+            }else{
                 System.out.println();
-                System.out.println("This card is invalid, you have already taken a card from the deck, enter 0 to skip your turn.");
+                System.out.println("This card is invalid, you have already taken a card from the deck, enter 0 to skip your turn, or choose a valid card.");
                 this.getPlayerInput();
             }
         }
     }
 
-    private void applyCardEffect(String[] card){
+    private boolean applyCardEffect(String[] card){
         if(card[0] == null){
             if(card[1].equals("+4")){
+                this.plusFourThrown++;
                 this.plusFour();
             }else{
                 this.colorChange();
             }
+            return false;
         }else{
-           if(card[1].equalsIgnoreCase("reverse")){
-                this.reverse();
-           }
-           if(card[1].equalsIgnoreCase("skip")){
-               this.skip();
+           if(card[1].equalsIgnoreCase("reverse") || card[1].equalsIgnoreCase("skip")){
+                this.skipChance();
+                return true;
            }
            if(card[1].equalsIgnoreCase("+2")){
                this.plusTwo();
+               return true;
            }
         }
+        return false;
     }
 
     private void plusFour(){
         if(!this.checkCounter()){
             if(curr_player.equals("player")){
                 System.out.println("You have used a plus four card ....");
-                System.out.println("The computer got 4 cards.");
+                System.out.println("The computer got" + this.plusFourThrown * 4 + " cards !");
+                this.addCards(this.compInven, this.plusFourThrown * 4);
             }
+            else{
+                System.out.println("The computer used a +4 !");
+                System.out.println("You got " + this.plusFourThrown * 4 + " cards !!");
+                this.addCards(this.playerInven, this.plusFourThrown * 4);
+            }
+            this.plusFourThrown = 0;
+        }else{
+            if(curr_player.equals("player")){
+                System.out.println();
+                System.out.println("You have used a plus four card ....");
+                System.out.println("Oh no the computer used a +4 too !");
+                System.out.println("You have a plus four in your inventory.");
+                String choice;
+                while(true){
+                    System.out.print("Do you want to use it ?(Y/N)");
+                    choice = this.scanner.next();
+                    if(choice.length() == 1 && (choice.equalsIgnoreCase("y") || choice.equalsIgnoreCase("n"))){break;}
+                    else{
+                        System.out.println();
+                        System.out.println("Please enter a valid choice !");
+                        System.out.println();
+                    }
+                }
+                if(choice.equalsIgnoreCase("y")){
+                    this.playerInven.remove(new String[]{null, "+4"});
+                    this.plusFourThrown++;
+                    this.curr_player = "comp";
+                }else{
+                    System.out.println("Ok you are not using your counter.");
+                }
+            }else{
+                this.plusFourThrown++;
+                this.compInven.remove(new String[]{null, "+4"});
+                this.curr_player = "player";
+            }
+            this.applyCardEffect(new String[]{null, "+4"});
         }
     }
 
     private String chooseColor() {
-        String choice;
         int temp;
-        while (true) {
-            if (curr_player.equals("player")) {
+        if (curr_player.equals("player")) {
+            while (true) {
                 System.out.println("Choose a color:");
                 for (int i = 0; i < colors.length; ++i) {
                     System.out.println((i + 1) + " " + colors[i]);
                 }
                 try {
                     temp = this.scanner.nextInt();
+                    if(0 < temp && temp <= this.colors.length){break;}
+                    else{
+                        System.out.println();
+                        System.out.println("Please enter a valid index !");
+                        System.out.println();
+                    }
                 }catch (InputMismatchException e){
                     this.scanner.nextLine();
                     System.out.println("Invalid input !");
                 }
             }
+        }else{
+            temp = random.nextInt(1, this.colors.length + 1);
         }
+        return this.colors[temp - 1];
     }
 
     private void colorChange(){
-
+        String color = this.chooseColor();
+        this.setTopCard(new String[]{color, null});
+        System.out.println();
+        if(this.curr_player.equals("player")){
+            System.out.println("Ok set the top color to what you chose.");
+        }
+        else{
+            System.out.println("The computer used a color change, the top card's color has been changed.");
+        }
+        System.out.println();
     }
 
-    private void reverse(){
-
-    }
-
-    private void skip(){
-
+    private void skipChance(){
+        if(this.curr_player.equals("player")){
+            System.out.println("The computer's chance got skipped.");
+        }else{
+            System.out.println("Your chance got skipped !");
+        }
     }
 
     private void plusTwo(){
-
+        if(this.curr_player.equals("player")){
+            System.out.println("The computer got two cards and their chance got skipped .");
+            this.addCards(this.compInven, 2);
+        }else{
+            System.out.println("You got 2 cards, and your chance got skipped.");
+            this.addCards(this.playerInven, 2);
+        }
     }
 
     private boolean checkCounter(){
         if(curr_player.equals("player")){
-            for(String[] card: this.playerInven){
+            for(String[] card: this.compInven){
                 if(card[1].equals("+4")){
                     return true;
                 }
             }
         }
         if(curr_player.equals("comp")){
-            for(String[] card: this.compInven){
+            for(String[] card: this.playerInven){
                 if(card[1].equals("+4")){
                     return true;
                 }
@@ -258,6 +381,11 @@ public class Uno {
             }
         }
         return output;
+    }
+
+    private void setTopCard(String[] card){
+        this.top_card[0] = card[0];
+        this.top_card[1] = card[1];
     }
 
     private void genDeck(){
