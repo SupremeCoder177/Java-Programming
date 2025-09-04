@@ -47,7 +47,26 @@ public class Main {
 //        Rps n = new Rps(3);
 //        n.run();
 
-        Uno u = new Uno();
-        u.start();
+        /*Uno u = new Uno();
+        u.start();*/
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter a number from 1 to 7");
+        DaysOfTheWeek day = switch (scanner.nextInt()) {
+            case 1 -> DaysOfTheWeek.MONDAY;
+            case 2 -> DaysOfTheWeek.TUESDAY;
+            case 3 -> DaysOfTheWeek.WEDNESDAY;
+            case 4 -> DaysOfTheWeek.THRUSDAY;
+            case 5 -> DaysOfTheWeek.FRIDAY;
+            case 6 -> DaysOfTheWeek.SATURDAY;
+            default -> DaysOfTheWeek.SUNDAY;
+        };
+
+        if(day == DaysOfTheWeek.MONDAY){
+            System.out.println("It is monday.");
+        }
+        else{
+            System.out.println("Today is not monday.");
+        }
     }
 }
