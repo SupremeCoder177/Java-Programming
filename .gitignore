@@ -4,3 +4,5 @@ out/
 *.iml
 *.jpeg
 *.png
+*.class
+DSA/.idea
