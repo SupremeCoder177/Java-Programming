@@ -4,8 +4,8 @@ import java.util.List;
 public class ThreeSum {
 
     public static List<List<Integer>> threeSum(int[] nums){
+        if(nums.length < 3 || nums == null) return null;
         List<List<Integer>> output = new ArrayList<>();
-        if(nums.length < 3) return output;
 
         int firstPt = 0, secondPt = (int)(nums.length / 2), thirdPt = nums.length - 1;
         boolean incFirst = false;
