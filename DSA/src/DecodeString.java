@@ -10,34 +10,32 @@ public class DecodeString {
         ArrayList<Integer> fixed_two_takings_indexs = new ArrayList<>();
         for(int i = 0; i < s.length(); i++){
             if(s.charAt(i) == '0') {
+                if(s.charAt(i - 1) == '0') return 0;
+                if(i < s.length() - 1 && s.charAt(i + 1) == '0') return 0;
+                if(!(Integer.parseInt(String.valueOf(s.charAt(i - 1))) <= 2)) return 0;
                 fixed_two_takings_indexs.add(i - 1);
             }
         }
         int num_two_takings = 0;
-        while((num_two_takings + fixed_two_takings_indexs.size()) * 2 < s.length()){
-            ArrayList<Integer> start_two_takings_pointers = new ArrayList<>();
-            for(int i = 0; i < s.length(); i++){
-                if(i + (num_two_takings * 2) < s.length() && !fixed_two_takings_indexs.contains(i) && s.charAt(i) != '0'){
-                    boolean add = true;
-                    for(int j = i; j < num_two_takings; j++){
-                        if(Integer.parseInt(String.valueOf(s.charAt(i + (j * 2)) + s.charAt(i + (j * 2) + 1))) <= 26) {
-                               add = false;
-                               break;
-                        }
+        ArrayList<Integer> two_slots = new ArrayList<>();
+        for(int i = 0; i < s.length(); i++){
+            if(!fixed_two_takings_indexs.contains(i) && s.charAt(i) != '0' && !fixed_two_takings_indexs.contains(i + 1) && i + 1 < s.length()) {
+                if(Integer.parseInt(s.substring(i, i + 2)) <= 26){
+                    if(i != 0 && !two_slots.contains(i - 1)){
+                        two_slots.add(i);
                     }
-                    if(add) start_two_takings_pointers.add(i);
                 }
             }
-            ways += start_two_takings_pointers.size();
-
-            num_two_takings++;
         }
-
+        while(num_two_takings < 0) {
+            num_two_takings++;
+            ways += 1;
+        }
         return ways;
     }
 
     public static void main(String[] args){
 
-        System.out.println("Number of ways can be decoded : " + numDecodings("226"));
+        System.out.println("Number of ways can be decoded : " + numDecodings("12398"));
     }
 }

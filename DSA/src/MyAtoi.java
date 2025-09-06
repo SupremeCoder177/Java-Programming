@@ -14,7 +14,7 @@ public class MyAtoi {
                 if(s.charAt(j) == '-' || s.charAt(j) == '+') continue;
             }
             if(Character.isDigit(s.charAt(j))){
-                mapping.add(j < s.length() - 1 ?  s.substring(j, j + 1) : s.substring(j));
+                mapping.add(s.substring(j, j + 1));
             }else break;
         }
 
@@ -33,7 +33,7 @@ public class MyAtoi {
     }
 
     public static void main(String[] args){
-        System.out.println(myAtoi("1337c0d3"));
+        System.out.println(myAtoi("1493"));
     }
 
 }
