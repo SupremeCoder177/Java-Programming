@@ -74,7 +74,10 @@ public class Main {
  */     //new MyFrame();
         //new BorderLayoutManager();
         //new FlowLayoutManager();
-        new GridLayoutManager();
+        //new GridLayoutManager();
+        //new MyLayeredFrame();
+        //new OpenAnotherWindow();
+        //new DialogBoxes();
     }
 
 }
