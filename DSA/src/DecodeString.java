@@ -30,7 +30,7 @@ public class DecodeString {
         while(num_two_takings < 0) {
             num_two_takings++;
             ways += 1;
-        }1
+        }
         return ways;
     }
 
