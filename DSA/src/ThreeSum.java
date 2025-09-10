@@ -7,37 +7,30 @@ public class ThreeSum {
         if(nums.length < 3 || nums == null) return null;
         List<List<Integer>> output = new ArrayList<>();
 
-        int firstPt = 0, secondPt = (int)(nums.length / 2), thirdPt = nums.length - 1;
-        boolean incFirst = false;
-        boolean loopedTwo = false, loopedThird = false;
-
-        while(firstPt < nums.length){
-            if(nums[firstPt] + nums[secondPt] + nums[thirdPt] == 0){
-                ArrayList<Integer> temp = new ArrayList<>();
-                temp.add(nums[firstPt]);
-                temp.add(nums[secondPt]);
-                temp.add(nums[thirdPt]);
-                output.add(temp);
+        for(int i = 0; i < nums.length; i++){
+            for(int j = 0; j < nums.length; j++){
+                if(j == i) continue;
+                for(int k = 0; k < nums.length; k++){
+                    if(k == i || k == j) continue;
+                    if(nums[i] + nums[j] + nums[k] == 0){
+                        List<Integer> temp = new ArrayList<>();
+                        temp.add(nums[i]);
+                        temp.add(nums[j]);
+                        temp.add(nums[k]);
+                        for(int l = 0; l < temp.size() - 1; l++){
+                            for(int m = l; m < temp.size(); m++){
+                                if(temp.get(m) < temp.get(l)){
+                                    int holder = temp.get(m);
+                                    temp.set(m, temp.get(l));
+                                    temp.set(l, holder);
+                                }
+                            }
+                        }
+                        if(!output.contains(temp)) output.add(temp);
+                    }
+                }
             }
-            //changing pointer
-            if(loopedTwo && loopedThird) incFirst = true;
-            if(incFirst) {firstPt++; loopedTwo = false; incFirst = false; loopedThird = false;}
-            if(!loopedTwo) secondPt++;
-            if(!loopedThird) thirdPt++;
-
-            if(firstPt == secondPt){
-                secondPt++;
-            }
-            if(firstPt == thirdPt){
-                thirdPt++;
-            }
-
-            //looping around
-            if(thirdPt > nums.length - 1) thirdPt = 0; loopedThird = true;
-            if(secondPt > nums.length - 1) secondPt = 0; loopedTwo = true;
-
         }
-
         return output;
     }
 
