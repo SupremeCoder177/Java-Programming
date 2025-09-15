@@ -18,7 +18,7 @@ public class BucketSort {
 
         List<Integer>[] buckets = new LinkedList[bucketSize];
 
-        for(int i = 0; i < bucketSize; i++){ 
+        for(int i = 0; i < bucketSize; i++){
             buckets[i] = new LinkedList<>();
         }
 
