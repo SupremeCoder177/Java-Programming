@@ -13,7 +13,7 @@ public class InsertionSort {
     }
 
     public static void main(String[] args){
-        int[] nums = {10, 4, 3, 7, 2, 1, 6, 5, 9, 0};
+        int[] nums = {10, 4, 3, 7, 2, 1, 6, 5, 9, 0, 8};
 
         insertionSort(nums);
 
