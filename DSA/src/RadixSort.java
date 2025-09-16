@@ -1,3 +1,5 @@
+import java.util.Random;
+
 // The fastest sorting algorithm out there
 public class RadixSort {
 
@@ -43,10 +45,56 @@ public class RadixSort {
         System.out.println();
     }
 
+    public static void allRadixSort(int[] nums){
+
+        int negatives_count = 0;
+        for(int i : nums) if(i < 0) negatives_count++;
+
+        int n = nums.length;
+        int[] negatives = new int[negatives_count];
+        int[] positives = new int[n - negatives_count];
+
+        int i = 0, j = 0;
+        for(int num : nums){
+            if(num < 0) {
+                negatives[j] = -num;
+                j++;
+            }else{
+                positives[i] = num;
+                i++;
+            }
+        }
+
+        radixSort(negatives);
+        radixSort(positives);
+
+        int[] output = new int[n];
+        int index = 0;
+
+        for(i = negatives_count - 1; i >= 0; i--){
+            output[index] = -negatives[i];
+            index++;
+        }
+        for(i = 0; i < n - negatives_count; i++){
+            output[index] = positives[i];
+            index++;
+        }
+
+        System.arraycopy(output, 0, nums, 0, n);
+    }
+
     public static void main(String[] args){
         int[] nums = {123, 34, 56, 12, 899, 1000, 456};
         radixSort(nums);
         printArray(nums);
+
+        int[] allNums = new int[15];
+        Random random = new Random();
+        for(int i = 0; i < allNums.length; i++){
+            allNums[i] = random.nextInt(-100, 100);
+        }
+        allRadixSort(allNums);
+        printArray(allNums);
     }
 
 }
