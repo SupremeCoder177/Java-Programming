@@ -93,7 +93,7 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     // the paint component is a built-in method in Java
-    public  void paintComponent(Graphics g){
+    public void paintComponent(Graphics g){
         super.paintComponent(g);
 
         // Graphics2D is a more useful class than graphics g
