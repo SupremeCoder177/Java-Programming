@@ -10,15 +10,17 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setTitle("Game 1");
-        frame.setVisible(true);
+
+        Music music = new Music();
+        music.playMusic("Game-Dev/Games/Game1/Audio/backgroundMusic.wav");
 
         GamePanel panel = new GamePanel();
         frame.add(panel);
 
-        // System.out.println(System.getProperty("user.dir"));
-        frame.setLocationRelativeTo(null);
+        // System.out.println(System.getProperty("user.dir"))
         frame.pack();
 
+        frame.setVisible(true);
         panel.run();
 
     }
