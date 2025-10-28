@@ -20,7 +20,7 @@ public class Main {
         frame.setVisible(true);
         frame.pack();
 
-        panel.startGame();
+        panel.run();
 
     }
 
