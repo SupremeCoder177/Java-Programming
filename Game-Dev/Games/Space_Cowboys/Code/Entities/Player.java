@@ -23,19 +23,19 @@ public class Player extends Entity{
             this.moving = false;
         }
         else{
-            if(inputCode == KeyEvent.VK_UP) {
+            if(inputCode == KeyEvent.VK_UP || inputCode == KeyEvent.VK_W) {
                 this.direction = "up";
                 this.moving = true;
             }
-            else if(inputCode == KeyEvent.VK_DOWN) {
+            else if(inputCode == KeyEvent.VK_DOWN || inputCode == KeyEvent.VK_S) {
                 this.direction = "down";
                 this.moving = true;
             }
-            else if(inputCode == KeyEvent.VK_LEFT) {
+            else if(inputCode == KeyEvent.VK_LEFT || inputCode == KeyEvent.VK_A) {
                 this.direction = "left";
                 this.moving = true;
             }
-            else if(inputCode == KeyEvent.VK_RIGHT) {
+            else if(inputCode == KeyEvent.VK_RIGHT || inputCode == KeyEvent.VK_D) {
                 this.direction = "right";
                 this.moving = true;
             }

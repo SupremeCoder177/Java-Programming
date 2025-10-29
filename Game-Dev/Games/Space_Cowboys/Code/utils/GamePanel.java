@@ -1,6 +1,7 @@
 package Games.Space_Cowboys.Code.utils;
 
 import Games.Space_Cowboys.Code.Entities.Player;
+import Games.Space_Cowboys.Code.StaticObjects.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,11 +15,14 @@ public class GamePanel extends JPanel{
     private Player player;
     private int code = 0;
 
+    GameObject obj = new GameObject("tree1", 100, 200);
+
     public GamePanel(){
         this.setPreferredSize(new Dimension(settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT));
         this.addKeyListener(this.handler);
         this.setFocusable(true);
         this.player = new Player(200, 200);
+        obj.loadImages();
     }
 
     public void run(){
@@ -43,9 +47,15 @@ public class GamePanel extends JPanel{
     }
 
     public void update(){
+        // player updates
         if(!this.newCode) this.code = 0;
         this.player.update(this.code);
         this.newCode = false;
+
+        // objects updates
+        obj.update();
+
+
     }
 
     @Override
@@ -55,7 +65,11 @@ public class GamePanel extends JPanel{
         Graphics2D g2 = (Graphics2D) g;
 
         if(this.gameRunning) {
+            // player drawing
             this.player.paint(g2);
+
+            // objects drawing
+            obj.draw(g2);
         }
 
         g2.dispose();
